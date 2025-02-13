@@ -14,20 +14,28 @@ while (true)
     {
         break;
     }       
-    if (int.TryParse(input, out var number) && number > 1)
+    if (int.TryParse(input, out var number))
     {
-        var factors = factor.FindFactors(number);
-        Console.Write("[");
-        for (var i = 0; i < factors.Length; i++)
+        try
         {
-            Console.Write(factors[i]);
-             if (i < factors.Length - 1)
-             {
-                 Console.Write(", ");
-             }
+            var factors = factor.FindFactors(number);
+            Console.Write("[");
+            for (var i = 0; i < factors.Length; i++)
+            {
+                Console.Write(factors[i]);
+                 if (i < factors.Length - 1)
+                 {
+                     Console.Write(", ");
+                 }
+            }
+            Console.WriteLine("]");
         }
-        Console.WriteLine("]");
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine($"Invalid number! Must be an integer between 2 and {int.MaxValue}");
+            
+        }
     }
     else
-        Console.WriteLine($"Invalid number! Must be an integer between 2 and {int.MaxValue}");
+        Console.WriteLine($"Invalid input! Must be an integer between 2 and {int.MaxValue}");
 }

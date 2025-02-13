@@ -8,10 +8,11 @@ public class Factor(NpgsqlConnection database)
 
     public int[] FindFactors(int target)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(target, 1);
         // If the number isn't a prime, it will be divisible by a prime number smaller
         // than or equal to it's square root. So in order to avoid allocating more memory
         // for storing more primes, it's better to call the function many times, as it isn't resource intensive.
-        List<int> factors = [];
+        List<int> factors = new(30);
         ReadOnlySpan<int> primesSpan = _primes;
         while (!IsPrime(target, primesSpan, out var factor))
         {
@@ -32,9 +33,9 @@ public class Factor(NpgsqlConnection database)
             
             var sqrt = (int) Math.Sqrt(number);
             
-            for (var i = 0; span[i] <= sqrt; i++)
+            foreach (var currentPrime in span)
             {
-                var currentPrime = span[i];
+                if (currentPrime > sqrt) break;
                 if (number % currentPrime != 0) continue;
                 factor = currentPrime;
                 return false;
