@@ -12,8 +12,8 @@ public class Factor(NpgsqlConnection database)
         // than or equal to it's square root. So in order to avoid allocating more memory
         // for storing more primes, it's better to call the function many times, as it isn't resource intensive.
         List<int> factors = [];
-        
-        while (!IsPrime(ref target, out var factor))
+        ReadOnlySpan<int> primesSpan = _primes;
+        while (!IsPrime(target, primesSpan, out var factor))
         {
             target /= factor;
             factors.Add(factor);
@@ -22,7 +22,7 @@ public class Factor(NpgsqlConnection database)
         factors.Add(target);
         return factors.ToArray();
         
-        bool IsPrime(ref int number, out int factor)
+        bool IsPrime(int number, ReadOnlySpan<int> span, out int factor)
         {
             if (number == int.MaxValue)
             {
@@ -32,9 +32,9 @@ public class Factor(NpgsqlConnection database)
             
             var sqrt = (int) Math.Sqrt(number);
             
-            for (var i = 0; _primes[i] <= sqrt; i++)
+            for (var i = 0; span[i] <= sqrt; i++)
             {
-                var currentPrime = _primes[i];
+                var currentPrime = span[i];
                 if (number % currentPrime != 0) continue;
                 factor = currentPrime;
                 return false;

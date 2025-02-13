@@ -13,8 +13,7 @@ while (true)
     if (!string.IsNullOrEmpty(input) && "/q".StartsWith(input))
     {
         break;
-    }
-
+    }       
     if (int.TryParse(input, out var number) && number > 1)
     {
         var factors = factor.FindFactors(number);
