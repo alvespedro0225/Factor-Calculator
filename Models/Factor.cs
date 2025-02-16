@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace Factoring.Models;
 
-public class Factor(NpgsqlConnection database)
+public sealed class Factor(NpgsqlConnection database)
 {
     private readonly int[] _primes = GetPrimes(database);
 
@@ -41,9 +41,7 @@ public class Factor(NpgsqlConnection database)
                 return false;
             }
             
-            if (factors.Count == 0) factors.Add(1);
             factor = 0;
-            
             return true;
         }
 
