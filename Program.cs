@@ -1,16 +1,13 @@
 ﻿using Factoring.Models;
-using Npgsql;
 
-var connectionString = Environment.GetEnvironmentVariable("DbConnectionString");
-using NpgsqlConnection connection = new(connectionString);
-connection.Open();
-var factor = new Factor(connection);
+const string path = "/home/pedro/Documents/Code/C#/Factor-Calculator/primes.csv";
+var factor = new Factor(path);
 
 while (true)
 {
     Console.Write("Enter a number: ");
     var input = Console.ReadLine()?.Trim().Replace(",", "");
-    if (!string.IsNullOrEmpty(input) && "/q".StartsWith(input))
+    if (!string.IsNullOrEmpty(input) && "quit".StartsWith(input))
     {
         break;
     }       

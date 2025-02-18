@@ -19,11 +19,9 @@ public static class GenerateFile
             start = start + 250_000_000 > start ? start + 250_000_000 : int.MaxValue;
             if (start == int.MaxValue) break;
         }
-
-        Console.WriteLine("a");
+        
         tasks.ForEach(t => t.Start());
         tasks.ForEach(t => t.Join());
-        Console.WriteLine("b");
         results.ForEach(t => primes = primes.Concat(t).ToArray());
         return primes;
     }
@@ -32,7 +30,7 @@ public static class GenerateFile
     {
         var primes = GetPrimes(start, limit);
         using StreamWriter fileWriter = new (Directory.GetParent(Directory.GetCurrentDirectory())!
-            .Parent!.Parent!.FullName + path);
+            .Parent!.Parent!.FullName + $"/{path}");
         foreach (var prime in primes)
         {
             fileWriter.WriteLine(prime.ToString());

@@ -1,10 +1,8 @@
-using Npgsql;
-
 namespace Factoring.Models;
 
-public sealed class Factor(NpgsqlConnection database)
+public sealed class Factor(string path)
 {
-    private readonly int[] _primes = GetPrimes(database);
+    private readonly int[] _primes = GetPrimes(path);
 
     public int[] FindFactors(int target)
     {
@@ -48,20 +46,17 @@ public sealed class Factor(NpgsqlConnection database)
 
     }
 
-    private static int[] GetPrimes(NpgsqlConnection connection)
+    private static int[] GetPrimes(string path)
     {
         var primes = new int[4792];
-        using var cmd = new NpgsqlCommand(
-            $"SELECT * FROM primes WHERE number < {(int) Math.Sqrt(int.MaxValue)} ORDER BY number",
-            connection
-        );
-        using var reader = cmd.ExecuteReader();
+        using var streamReader = new StreamReader(path); 
         var i = 0;
-        while (reader.Read())
+        while (!streamReader.EndOfStream)
         {
-            primes[i++] = reader.GetInt32(0);
+            string? line = streamReader.ReadLine();
+            if (int.TryParse(line, out int prime))
+                primes[i++] = prime;
         }
-        connection.Close();
         return primes.ToArray();
     }
 }
